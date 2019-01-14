@@ -56,13 +56,13 @@ setup(
     ],
     keywords = 'cli,git',
     packages = find_packages(exclude=['docs', 'tests*']),
-    install_requires = ['docopt'],
+    install_requires = ['PyGithub'],
     extras_require = {
         'test': ['coverage', 'pytest', 'pytest-cov'],
     },
     entry_points = {
         'console_scripts': [
-            'fsyncer=fsyncer.cli:main',
+            'fsyncer=fsyncer:main',
         ],
     },
     cmdclass = {'test': RunTests},
