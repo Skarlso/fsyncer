@@ -25,13 +25,8 @@ def sync_list(repos):
 def get_repo_list():
     g = Github(os.environ['SYNC_GITHUB_TOKEN'])
     repos = []
-    print(g)
     user = g.get_user()
-    print(user)
-    rs = user.get_repos()
-    print(rs)
-    for repo in rs:
-        print(repo)
+    for repo in user.get_repos():
         if repo.fork and repo.owner.name == user.name:
             repos.append(repo)
     return repos
