@@ -1,10 +1,11 @@
 import unittest
-from unittest import mock
+from unittest.mock import patch
 from fsyncer import fsyncer
 
 class TestFsyncer(unittest.TestCase):
-    @mock.patch('fsyncer.get_repo_list')
-    def test_no_config_file(self):
+    @patch('fsyncer.fsyncer.Github')
+    def test_no_config_file(self, mockHub):
+        print(mockHub)
         fsyncer.main()
 
 if __name__ == '__main__':
