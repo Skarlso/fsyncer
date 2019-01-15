@@ -21,10 +21,11 @@ class TestFsyncer(unittest.TestCase):
         get_user.assert_called()
         self.assertEqual(1, len(repos), "len of %d did not equal 1" % len(repos))
 
-    @patch('fsyncer.fsyncer.Path')
+    @patch('fsyncer.fsyncer.Path.is_file')
     @patch("builtins.open", new_callable=mock_open, read_data="test_repo")
     @patch("fsyncer.fsyncer.call")
-    def test_main_with_config_file(self, mock_call, mock_file, mock_path):
+    def test_main_with_config_file(self, mock_call, _, mock_path):
+        mock_path.return_value = True
         fsyncer.main()
         mock_call.assert_called_with(['rm', '-fr', 'test_repo'])
         mock_path.assert_called()
