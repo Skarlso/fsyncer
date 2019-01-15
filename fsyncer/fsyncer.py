@@ -1,4 +1,3 @@
-import argparse
 import os
 import logging
 from github import Github
