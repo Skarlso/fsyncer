@@ -24,7 +24,8 @@ class TestFsyncer(unittest.TestCase):
     @patch('fsyncer.fsyncer.Path.is_file')
     @patch("builtins.open", new_callable=mock_open, read_data="test_repo")
     @patch("fsyncer.fsyncer.sync_list")
-    def test_main_with_config_file(self, mock_sync_list, _, mock_path):
+    def test_main_with_config_file(self, mock_sync_list, mock_file, mock_path):
+        mock_file = ['test_repo']
         mock_path.return_value = True
         fsyncer.main()
         mock_sync_list.assert_called_with(['test_repo'])
