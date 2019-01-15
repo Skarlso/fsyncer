@@ -17,9 +17,9 @@ def sync_list(repos):
     logger.info("syncing %d forked repositories" % len(repos))
     for repo in repos:
         try:
-            logger.info("cloning into: %s" % repo.name)
+            logger.info("cloning into: %s" % repo)
         finally:
-            call(["rm", "-fr", repo.name])
+            call(["rm", "-fr", repo])
 
 
 def get_repo_list():
@@ -28,7 +28,7 @@ def get_repo_list():
     user = g.get_user()
     for repo in user.get_repos():
         if repo.fork and repo.owner.name == user.name:
-            repos.append(repo)
+            repos.append(repo.name)
     return repos
 
 
@@ -49,7 +49,6 @@ def main():
     config_file = os.path.dirname(os.path.abspath(__file__))
     config = Path(os.path.join(config_file, '.config'))
     repos = []
-
     if config.is_file():
         logger.info('found configuration file at location... syncing repos from file')
         with open(config) as conf:
