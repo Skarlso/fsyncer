@@ -22,16 +22,13 @@ class TestFsyncer(unittest.TestCase):
         self.assertEqual(1, len(repos), "len of %d did not equal 1" % len(repos))
 
     @patch('fsyncer.fsyncer.Path.is_file')
+    @patch("builtins.open", new_callable=mock_open, read_data="test_repo\n")
     @patch("fsyncer.fsyncer.sync_list")
-    def test_main_with_config_file(self, mock_sync_list, mock_path):
+    def test_main_with_config_file(self, mock_sync_list, _, mock_path):
         mock_path.return_value = True
-        # handlers = (mock_file.return_value, mock_open(read_data="test_repo\n").return_value,)
-        # mock_file.side_effect = handlers
-        mo = mock_open(read_data="test_repo\n")
-        with patch('builtins.open', mo):
-            fsyncer.main()
-            mock_sync_list.assert_called_with(['test_repo'])
-            mock_path.assert_called()
+        fsyncer.main()
+        mock_sync_list.assert_called_with(['test_repo'])
+        mock_path.assert_called()
 
     @patch('fsyncer.fsyncer.Path.is_file')
     @patch('fsyncer.fsyncer.call')
