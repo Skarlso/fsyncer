@@ -25,9 +25,8 @@ class TestFsyncer(unittest.TestCase):
     @patch("builtins.open", new_callable=mock_open, read_data="test_repo\n")
     @patch("fsyncer.fsyncer.sync_list")
     def test_main_with_config_file(self, mock_sync_list, _, mock_path):
-        if 'TRAVIS' in os.environ:
+        if 'TRAVIS_JOB_NAME' in os.environ:
             pass
-        print(os.environ)
         mock_path.return_value = True
         fsyncer.main()
         mock_sync_list.assert_called_with(['test_repo'])
