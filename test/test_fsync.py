@@ -25,9 +25,7 @@ class TestFsyncer(unittest.TestCase):
     @patch("builtins.open", new_callable=mock_open, read_data="test_repo\n")
     @patch("fsyncer.fsyncer.sync_list")
     def test_main_with_config_file(self, mock_sync_list, _, mock_path):
-        if 'TRAVIS_BUILD_NUMBER' in os.environ:
-            pass
-        print("TRAVIS BUILD NUMBER: ", os.environ['TRAVIS_BUILD_NUMBER'])
+        pass
         mock_path.return_value = True
         fsyncer.main()
         mock_sync_list.assert_called_with(['test_repo'])
