@@ -27,6 +27,7 @@ class TestFsyncer(unittest.TestCase):
     def test_main_with_config_file(self, mock_sync_list, _, mock_path):
         if 'TRAVIS_BUILD_NUMBER' in os.environ:
             pass
+        print("TRAVIS BUILD NUMBER: ", os.environ['TRAVIS_BUILD_NUMBER'])
         mock_path.return_value = True
         fsyncer.main()
         mock_sync_list.assert_called_with(['test_repo'])
