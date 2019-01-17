@@ -2,7 +2,7 @@ import os
 import logging
 from github import Github, Repository
 from pathlib import Path
-from subprocess import run
+from subprocess import run, CalledProcessError
 from typing import List
 
 
@@ -18,15 +18,17 @@ def sync_list(repos: List[Repository.Repository]):
     logger.info("syncing %d forked repositories" % len(repos))
     for repo in repos:  # type: Repository.Repository
         try:
-            status = 0
             logger.info("cloning into: %s" % repo.name)
-            status = run(["git", "clone", repo.ssh_url, repo.name]).returncode
+            run(["git", "clone", repo.ssh_url, repo.name])
             # setup upstream for updating
             logger.info("setup upstream to {repo.parent.ssh_url}")
             run(["cd {repo.name} && git remote add upstream {repo.parent.ssh_url}"])
             # do the update
             logger.info("doing the update with push")
             run(["cd {repo.name} && git fetch upstream && git rebase upstream/master && git push origin"])
+            logger.info("successfully updated {repo.name}")
+        except CalledProcessError:
+            logger.info("failed updating {repo.name}")
         finally:
             run(["rm", "-fr", repo])
 
