@@ -3,5 +3,6 @@ python:
   - "3.6"
 install:
   - make init
+  - make test_dependencies
 script:
   - make test

@@ -27,7 +27,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     keywords='cli,git',
-    packages=find_packages(exclude=['docs', 'tests*']),
+    packages=find_packages(exclude=['docs', 'test*']),
     install_requires=['PyGithub'],
     entry_points={
         'console_scripts': [

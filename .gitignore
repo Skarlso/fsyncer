@@ -3,3 +3,6 @@ __pycache__
 *.log
 .idea
 venv
+build
+dist
+fsyncer.egg-info

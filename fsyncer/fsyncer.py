@@ -57,12 +57,11 @@ def main():
     Beginning syncing...
     ''')
 
-    config_file = os.path.dirname(os.path.abspath(__file__))
-    config = Path(os.path.join(config_file, '.config'))
+    repo_list = Path(os.path.join(Path.home(), '.config', 'fsyncer', '.repo_list'))
     only = []
-    if config.is_file():
+    if repo_list.is_file():
         logger.info('found configuration file... syncing repos from file')
-        with open(config) as conf:
+        with open(repo_list) as conf:
             for line in conf:
                 only.append(line.strip())
 
