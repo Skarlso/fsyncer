@@ -1,8 +1,9 @@
 import os
 import logging
-from github import Github
+from github import Github, Repository
 from pathlib import Path
-from subprocess import call
+from subprocess import run
+from typing import List
 
 
 logging.basicConfig(filename='fsync.log',
@@ -13,13 +14,21 @@ logging.basicConfig(filename='fsync.log',
 logger = logging.getLogger('fsync_logger')
 
 
-def sync_list(repos):
+def sync_list(repos: List[Repository.Repository]):
     logger.info("syncing %d forked repositories" % len(repos))
-    for repo in repos:
+    for repo in repos:  # type: Repository.Repository
         try:
-            logger.info("cloning into: %s" % repo)
+            status = 0
+            logger.info("cloning into: %s" % repo.name)
+            status = run(["git", "clone", repo.ssh_url, repo.name]).returncode
+            # setup upstream for updating
+            logger.info("setup upstream to {repo.parent.ssh_url}")
+            run(["cd {repo.name} && git remote add upstream {repo.parent.ssh_url}"])
+            # do the update
+            logger.info("doing the update with push")
+            run(["cd {repo.name} && git fetch upstream && git rebase upstream/master && git push origin"])
         finally:
-            call(["rm", "-fr", repo])
+            run(["rm", "-fr", repo])
 
 
 def get_repo_list():
@@ -28,7 +37,7 @@ def get_repo_list():
     user = g.get_user()
     for repo in user.get_repos():
         if repo.fork and repo.owner.name == user.name:
-            repos.append(repo.name)
+            repos.append(repo)
     return repos
 
 
@@ -48,14 +57,16 @@ def main():
 
     config_file = os.path.dirname(os.path.abspath(__file__))
     config = Path(os.path.join(config_file, '.config'))
-    repos = []
+    only = []
     if config.is_file():
-        logger.info('found configuration file at location... syncing repos from file')
+        logger.info('found configuration file... syncing repos from file')
         with open(config) as conf:
             for line in conf:
-                repos.append(line.strip())
-    else:
-        logger.info('no config files found. syncing all remote repos')
-        repos = get_repo_list()
+                only.append(line.strip())
+
+    logger.info('retrieving forks for user')
+    repos = get_repo_list()
+    if len(only) > 0:
+        repos = list(filter(lambda r: r.name in only, repos))
 
     sync_list(repos)

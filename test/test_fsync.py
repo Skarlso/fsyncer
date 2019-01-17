@@ -32,7 +32,7 @@ class TestFsyncer(unittest.TestCase):
         mock_path.assert_called()
 
     @patch('fsyncer.fsyncer.Path.is_file')
-    @patch('fsyncer.fsyncer.call')
+    @patch('fsyncer.fsyncer.run')
     @patch('fsyncer.fsyncer.get_repo_list')
     def test_main_without_config_file(self, mock_repo_list, mock_call, mock_path):
         os.environ['SYNC_GITHUB_TOKEN'] = 'dummy token'
