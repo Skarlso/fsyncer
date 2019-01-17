@@ -22,10 +22,10 @@ def sync_list(repos: List[Repository.Repository]):
             run(["git", "clone", repo.ssh_url, repo.name])
             # setup upstream for updating
             logger.info("setup upstream to {repo.parent.ssh_url}")
-            run(["cd {repo.name} && git remote add upstream {repo.parent.ssh_url}"])
+            run("cd {repo.name} && git remote add upstream {repo.parent.ssh_url}".split())
             # do the update
             logger.info("doing the update with push")
-            run(["cd {repo.name} && git fetch upstream && git rebase upstream/master && git push origin"])
+            run("cd {repo.name} && git fetch upstream && git rebase upstream/master && git push origin".split())
             logger.info("successfully updated {repo.name}")
         except CalledProcessError:
             logger.info("failed updating {repo.name}")
