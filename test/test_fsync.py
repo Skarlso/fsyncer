@@ -36,10 +36,14 @@ class TestFsyncer(unittest.TestCase):
     @patch('fsyncer.fsyncer.get_repo_list')
     def test_main_without_config_file(self, mock_repo_list, mock_call, mock_path):
         os.environ['SYNC_GITHUB_TOKEN'] = 'dummy token'
-        mock_repo_list.return_value = ['no_config_test_repo']
+        mock_repo = MagicMock()
+        mock_repo.fork.return_value = True
+        mock_repo.owner.name = 'skarlso'
+        mock_repo.name = 'mock_repo'
+        mock_repo_list.return_value = [mock_repo]
         mock_path.return_value = False
         fsyncer.main()
-        mock_call.assert_called_with(['rm', '-fr', 'no_config_test_repo'])
+        mock_call.assert_called_with(['rm', '-fr', 'mock_repo'])
         mock_path.assert_called()
 
 

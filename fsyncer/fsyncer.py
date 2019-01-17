@@ -30,7 +30,7 @@ def sync_list(repos: List[Repository.Repository]):
         except CalledProcessError:
             logger.info("failed updating {repo.name}")
         finally:
-            run(["rm", "-fr", repo])
+            run(["rm", "-fr", repo.name])
 
 
 def get_repo_list():
