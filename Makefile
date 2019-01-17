@@ -21,7 +21,7 @@ test_dependencies:
 	$(INSTALL) -r test-requirements.txt
 
 test:
-	pytest
+	$(BIN)/tox
 
 dist:
 	$(INSTALL) wheel

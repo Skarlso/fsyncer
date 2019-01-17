@@ -6,3 +6,4 @@ venv
 build
 dist
 fsyncer.egg-info
+.tox
