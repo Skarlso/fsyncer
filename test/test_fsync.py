@@ -22,13 +22,25 @@ class TestFsyncer(unittest.TestCase):
         self.assertEqual(1, len(repos), "len of %d did not equal 1" % len(repos))
 
     @patch('fsyncer.fsyncer.Path.is_file')
-    @patch("builtins.open", new_callable=mock_open, read_data="test_repo\n")
+    @patch("builtins.open", new_callable=mock_open, read_data="mock_repo1\n")
     @patch("fsyncer.fsyncer.sync_list")
-    def test_main_with_config_file(self, mock_sync_list, _, mock_path):
-        self.skipTest("not working on travis")
+    @patch('fsyncer.fsyncer.get_repo_list')
+    def test_main_with_config_file(self, mock_repo_list, mock_sync_list, _, mock_path):
+        # self.skipTest("not working on travis")
+        os.environ['SYNC_GITHUB_TOKEN'] = 'dummy token'
+        mock_repo1 = MagicMock()
+        mock_repo1.fork.return_value = True
+        mock_repo1.owner.name = 'skarlso'
+        mock_repo1.name = 'mock_repo1'
+        mock_repo2 = MagicMock()
+        mock_repo2.fork.return_value = True
+        mock_repo2.owner.name = 'skarlso'
+        mock_repo2.name = 'mock_repo2'        
+        mock_repo_list.return_value = [mock_repo1, mock_repo2]
+
         mock_path.return_value = True
         fsyncer.main()
-        mock_sync_list.assert_called_with(['test_repo'])
+        mock_sync_list.assert_called_with([mock_repo1])
         mock_path.assert_called()
 
     @patch('fsyncer.fsyncer.Path.is_file')
