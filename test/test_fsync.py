@@ -12,7 +12,7 @@ class TestFsyncer(TestCase):
 
     @patch('fsyncer.fsyncer.Github.get_user')
     def test_get_repo_list(self, get_user):
-        os.environ['SYNC_GITHUB_TOKEN'] = 'dummy token'
+        os.environ['FSYNC_GITHUB_TOKEN'] = 'dummy token'
         mock_repo = MagicMock()
         mock_repo.fork.return_value = True
         mock_repo.owner.name = 'skarlso'
@@ -29,7 +29,7 @@ class TestFsyncer(TestCase):
     @patch("fsyncer.fsyncer.sync_list")
     @patch('fsyncer.fsyncer.get_repo_list')
     def test_main_with_config_file(self, mock_repo_list, mock_sync_list):
-        os.environ['SYNC_GITHUB_TOKEN'] = 'dummy token'
+        os.environ['FSYNC_GITHUB_TOKEN'] = 'dummy token'
         mock_repo1 = MagicMock()
         mock_repo1.fork.return_value = True
         mock_repo1.owner.name = 'skarlso'
@@ -47,7 +47,7 @@ class TestFsyncer(TestCase):
     @patch('fsyncer.fsyncer.run')
     @patch('fsyncer.fsyncer.get_repo_list')
     def test_main_without_config_file(self, mock_repo_list, mock_call):
-        os.environ['SYNC_GITHUB_TOKEN'] = 'dummy token'
+        os.environ['FSYNC_GITHUB_TOKEN'] = 'dummy token'
         mock_repo = MagicMock()
         mock_repo.fork.return_value = True
         mock_repo.owner.name = 'skarlso'

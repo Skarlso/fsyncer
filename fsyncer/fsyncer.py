@@ -1,5 +1,6 @@
 import os
 import logging
+import sys
 from github import Github, Repository
 from pathlib import Path
 from subprocess import run, CalledProcessError
@@ -15,6 +16,21 @@ logger = logging.getLogger('fsync_logger')
 
 
 def sync_list(repos: List[Repository.Repository]):
+    """
+    Syncs all forks for a given user.
+    1: Clone the repository
+    2: Setup upstream as the parent ssh url
+    3: Do a fetch from the upstream
+    4: Rebase
+    5: Push
+
+    This only works in case the remote fork isn't dirty / does not have changes
+    that make it impossible to do a Fast forward.
+
+    :param repos: Repository.Repository
+        A List of repositories to sync.
+    :return: None
+    """
     logger.info("syncing %d forked repositories" % len(repos))
     for repo in repos:  # type: Repository.Repository
         try:
@@ -33,8 +49,16 @@ def sync_list(repos: List[Repository.Repository]):
             run(["rm", "-fr", repo.name])
 
 
-def get_repo_list():
-    g = Github(os.environ['SYNC_GITHUB_TOKEN'])
+def get_repo_list() -> List[Repository.Repository]:
+    """
+    Gather a list of remote forks for a given user.
+    Only repositories are selected for which the given user is an owner.
+    This prevents the inclusion of Company based forks.
+
+    :return: List[Repository.Repository]
+        A list of remote forks for the current user.
+    """
+    g = Github(os.environ['FSYNC_GITHUB_TOKEN'])
     repos = []
     user = g.get_user()
     for repo in user.get_repos():
@@ -44,6 +68,14 @@ def get_repo_list():
 
 
 def main():
+    """
+    The main of fsyncer. Gathers the list of repositories to sync
+    and filters them based on a `.repos_list` file that can be located
+    under `~/.config/fsyncer/.repo_list`. This file contains a list
+    of repository names which the user wishes to syncronize. Anything else
+    will be ignored.
+    :return: None
+    """
     print(r'''
     (`-').->          <-. (`-')_           (`-')  _   (`-')
     ( OO)_      .->      \( OO) )_         ( OO).-/<-.(OO )
@@ -56,6 +88,10 @@ def main():
 
     Beginning syncing...
     ''')
+
+    if "FSYNC_GITHUB_TOKEN" not in os.environ:
+        print("Please set up a token by FSYNC_GITHUB_TOKEN=<token>.")
+        sys.exit(1)
 
     repo_list = Path(os.path.join(Path.home(), '.config', 'fsyncer', '.repo_list'))
     only = []
