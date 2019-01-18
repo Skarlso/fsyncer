@@ -16,7 +16,7 @@ setup(
     url='https://github.com/Skarlso/fsyncer',
     author='Gergely Brautigam',
     author_email='gergely.brautigam@gmail.com',
-    license='LICENSE',
+    license='LICENSE.txt',
     classifiers=[
         'Intended Audience :: Developers',
         'Topic :: Utilities',
