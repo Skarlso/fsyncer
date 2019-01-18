@@ -15,6 +15,7 @@ Installing
 ----------
 
 ::
+
     pip install fsyncer
 
 
@@ -24,6 +25,7 @@ Running
 From a cron job for example which runs every day / week / month...
 
 ::
+
     export FSYNC_GITHUB_TOKEN=<github_token_with_repo_access_scope>
     fsyncer
 
