@@ -35,7 +35,7 @@ setup(
     install_requires=['PyGithub'],
     entry_points={
         'console_scripts': [
-            'fsyncer=fsyncer:main',
+            'fsyncer=fsyncer.fsyncer:main',
         ],
     }
 )
