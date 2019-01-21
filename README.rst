@@ -15,7 +15,8 @@ Installing
 ----------
 
 ::
-
+    pip install setuptools
+    pip install wheel
     pip install fsyncer
 
 
